@@ -10,18 +10,17 @@ python3 sys.path.append(vim.eval('expand("<sfile>:h")'))
 " --------------------------------
 function! CreateFig()
 python3 << endOfPython
-from Inkscape import Inkscape_example
+from Inkscape import create
 
+title = vim.current.line
+root = vim.eval("b:vimtex.root")
+root = root+'/figures'
 
-print(Inkscape_example())
+create(title,root)
 
 endOfPython
 endfunction
 
-"title = vim.current.line
-"root = vim.eval("b:vimtex.root")
-"root = root+'/figures'
-"print(root, title)
 " --------------------------------
 "  Expose our commands to the user
 " --------------------------------
