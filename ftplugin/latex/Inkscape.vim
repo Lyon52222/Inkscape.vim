@@ -54,10 +54,25 @@ edit(title,root)
 endOfPython
 endfunction
 
+function! CompileFig()
+python3 << endOfPython
+from Inkscape import get_title,compile
+title_line = vim.current.line
+title = get_title(title_line)
+root = vim.eval("b:vimtex.root")
+root = root+'/figures'
+
+compile(title,root)
+
+endOfPython
+endfunction
+
 " --------------------------------
 "  Expose our commands to the user
 " --------------------------------
 command! CreateFig call CreateFig()
 command! SetupFig call SetupFig()
 command! EditFig call EditFig()
+command! CompileFig call CompileFig()
+
 

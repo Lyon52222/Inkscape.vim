@@ -99,5 +99,56 @@ def edit(title, root):
     print("Edit figure: ", figure_path)
 
 
+def compile(title, root):
+    title = title.strip()
+    file_name = title.replace(' ', '-').lower() + '.svg'
+    figures = Path(root).absolute()
+    figure_path = figures / file_name
+
+    pdf_path = figure_path.parent / (figure_path.stem + '.pdf')
+
+    inkscape_version = subprocess.check_output(
+        ['inkscape', '--version'], universal_newlines=True)
+
+    # Convert
+    # - 'Inkscape 0.92.4 (unknown)' to [0, 92, 4]
+    # - 'Inkscape 1.1-dev (3a9df5bcce, 2020-03-18)' to [1, 1]
+    # - 'Inkscape 1.0rc1' to [1, 0]
+    inkscape_version = re.findall(r'[0-9.]+', inkscape_version)[0]
+    inkscape_version_number = [int(part)
+                               for part in inkscape_version.split('.')]
+
+    # Right-pad the array with zeros (so [1, 1] becomes [1, 1, 0])
+    inkscape_version_number = inkscape_version_number + \
+        [0] * (3 - len(inkscape_version_number))
+
+    # Tuple comparison is like version comparison
+    if inkscape_version_number < [1, 0, 0]:
+        command = [
+            'inkscape',
+            '--export-area-page',
+            '--export-dpi', '300',
+            '--export-pdf', pdf_path,
+            '--export-latex', figure_path
+        ]
+    else:
+        command = [
+            'inkscape', figure_path,
+            '--export-area-page',
+            '--export-dpi', '300',
+            '--export-type=pdf',
+            '--export-latex',
+            '--export-filename', pdf_path
+        ]
+
+    # Recompile the svg file
+    completed_process = subprocess.run(command)
+
+    if completed_process.returncode != 0:
+        print("Compile Error: ", completed_process.returncode)
+    else:
+        print("Compile pdf: ", pdf_path)
+
+
 def setup():
     vim.current.range.append(setup_template())
