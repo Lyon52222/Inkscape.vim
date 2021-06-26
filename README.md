@@ -16,7 +16,19 @@ Use your plugin manager of choice.
   - Add `Plug 'https://github.com/Lyon52222/Inkscape.vim'` to .vimrc
   - Run `:PlugInstall`
 
+## Use
+1. Use **:SetupFig** to paste the usepackage and newcommand to current line.
+2. Use **:CreateFig** to create a svg with current line as it's name and open it with inkscape.
+3. Use **:EditFig** to open svg with inkscape. 
+
+current line should like **\incfig{*name*}**.
+
+4. Use **:CompileFig** to Compile svg to pdf which can import to latex. 
+
+current line should be like **\incfig{ *name* }**
+
 ## Todo
+
 
 1. Add auto compile to pdf
 2. Write documentation
